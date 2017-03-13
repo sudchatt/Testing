@@ -1,0 +1,42 @@
+{
+    "AccountDetails_Res": {
+        "Form1": {
+            "accno": "1234",
+            "name": "sagar",
+            "branch": "bangalore",
+            "acctype": "savings",
+            "currbal": "123456",
+            "ccy": "INR",
+            "funds": "23456",
+            "lineamt": "345677"
+        }
+    },
+    "TxnDetails_Res": {
+        "Table": [
+            {
+                "ddate": "07-10-2014",
+                "amt": "234566",
+                "desc": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Total",
+                "closingbal": "123456",
+                "acctype": "debit",
+                "image": "icon_currency.png"
+            },
+            {
+                "ddate": "06-10-2014",
+                "amt": "34567",
+                "desc": "Salary of $34,567 is credited to account",
+                "closingbal": "56752",
+                "acctype": "credit",
+                "image": "piggy_green.png"
+            },
+            {
+                "ddate": "05-10-2014",
+                "amt": "21345",
+                "desc": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Reliance",
+                "closingbal": "54422",
+                "acctype": "credit",
+                "image": "icon_currency.png"
+            }
+        ]
+    }
+}

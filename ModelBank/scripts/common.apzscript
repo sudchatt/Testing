@@ -1,0 +1,95 @@
+var gTabWidth = 0;
+var gTabWidth = 0;
+apz.app.menu = function(obj, layout) {
+    var menuitem = $(obj).text().trim();
+   // $("#UserDetails__o__userdetails__img").hide();
+   // $("#page-body").css("margin-top", "0px");
+    var menuArr = (menuitem.toLowerCase()).split(" ");
+    if (menuitem == "TRANSFERS") {
+        var params = {};
+        params.animation = 27;
+        apz.mca.execEvent("transfers", "");
+        apz.app.highlightMenu(obj);
+    } else if (menuitem == "OVERVIEW") {
+        var params = {};
+        params.animation = 27;
+        params.div = "";
+        apz.mca.execEvent("Dashboard", "");
+        //$("#imageColHeader_sec_col_div").removeClass("w0");
+       // $("#imageColHeader_sec_col_div").addClass("lcol2");
+        //$("#UserDetails__o__userdetails__img").show();
+    } else if (menuitem == "SERVICES") {
+        apz.launchScreen("Widgets", "");
+    } else {
+        var params = {};
+        params.modal = true;
+        apz.mca.execEvent("Customer", params);
+        //appzillon.util.displayMessage("APP-AUTH-001");
+    }
+};
+apz.app.trasfersAction = function() {
+    apz.data.buildData();
+    apz.app.transferContent = apz.copyJSONObject(apz.data.scrdata);
+    var params = {};
+    params.animation = 27;
+    apz.mca.execEvent("transferDetails", "");
+};
+apz.app.transferDetailsAction = function() {
+    var params = {};
+    params.services = {};
+    params.services[0] = {};
+    params.services[0].id = "FT";
+    params.services[0].ifaceName = "Transfers";
+    params.services[0].buildReq = "Y";
+    params.services[0].paintResp = "Y";
+    params.services[0].req = "";
+    params.services[0].async = true;
+    params.services[0].callBack = apz.app.ftCallback;
+    apz.mca.execEvent("success", params);
+};
+apz.app.ftCallback = function(resp) {
+    if (resp.resFull.Transfers_Res.body[0] === "success") {
+              var params = {};
+		//params.msgtype ="INLINEMESSAGE";
+        params.code = "APZ-TRF-001";
+        apz.dispMsg(params);
+    } else {
+        alert("Failure");
+    }
+};
+apz.app.cancelAction = function() {
+    var params = {};
+    params.animation = 28;
+    apz.mca.execEvent("Dashboard", "");
+};
+apz.app.cancelActionTD = function() {
+    var params = {};
+    params.animation = 28;
+    apz.mca.execEvent("transfers", "");
+}
+apz.app.anotherTransaction = function() {
+    var params = {};
+    params.animation = 27;
+    apz.mca.execEvent("transfers", "");
+};
+apz.app.highlightMenu = function(obj) {
+    $('.current').removeClass('current');
+    $(obj).addClass('current');
+};
+apz.app.dashBoard = function() {
+    appzillon.util.launchScreen('Dashboard', "");
+};
+/*apz.app.showDate = function(cboxNo) {
+    switch (cboxNo) {
+        case 1:
+            $("#date_section_sec_col_div").toggle(1000, this.checked);
+            break;
+        case 2:
+            $("#payDate2").toggle(1000, this.checked);
+            break;
+        case 3:
+            $("#payDate3").toggle(1000, this.checked);
+            break;
+    }
+};*/
+apz.app.logout = function() {};

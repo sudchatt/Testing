@@ -1,0 +1,864 @@
+var lat = 0;
+var longi = 0;
+var animeElm = $('#grid_row_3_loc_main_div');
+appzillon.app.load_Locator = function() {
+	var mapURL = "https://maps.googleapis.com/maps/api/js";
+	var scrid = document.getElementsByTagName('body')[0];
+	//alert("script tag" + scrid);
+	var jsElem = document.createElement('script');
+	jsElem.src = mapURL;
+	jsElem.type = "text/javascript";
+	scrid.appendChild(jsElem);
+	try {
+		var mapurl = "https://maps.gstatic.com/maps-api-v3/api/js/18/2/main.js";
+		jsElem = document.createElement('script');
+		jsElem.src = mapurl;
+		jsElem.type = "text/javascript";
+		scrid.appendChild(jsElem);
+	} catch (e) {
+		alert(e);
+	}
+	getPosition();
+	//var fileoutput = appzillon.util.getFile("datafiles/FinancialPosition_data.json");
+	$("#fgp_container_list_1_main").addClass("dispnone");
+	$("#fgp_container_list_2_main").addClass("dispnone");
+	var fileoutput = appzillon.util.getFile("datafiles/Locator_data.json");
+	appzillon.data.scrdata = JSON.parse(fileoutput);
+	//appzillon.data.scrdata = JSON.parse(fileoutput1);
+	appzillon.data.loadData();
+	//alert("calling maps");
+	$("#element_map").click(showList);
+    $("#element_button_1").click(function(){
+      appzillon.plugin.store("flag1","Marker");
+      appzillon.util.launchScreen("Map");
+    });
+};
+
+function inject() {
+	alert("injecting");
+	var mapDiv = document.getElementById('mapBtn');
+	try {
+		google.maps.event.addDomListener(mapDiv, 'click', loadMap);
+	} catch (e) {
+		alert("exception::::" + e);
+	}
+}
+appzillon.app.nearMe = function() {
+	animeElm.addClass('trans').css('top', '10%');
+	appzillon.app.removeAnime();
+};
+appzillon.app.locate = function() {
+	animeElm.addClass('trans').css('top', '77%');
+	appzillon.app.removeAnime();
+};
+appzillon.app.removeAnime = function() {
+	setTimeout(function() {
+		animeElm.removeClass('trans');
+	}, 600);
+};
+appzillon.app.stateChange = function(stateObj) {
+	appzillon.app.removeOption('element_dropdown_2');
+	appzillon.app.removeOption('element_dropdown_3');
+	if ($(stateObj).val() == "Lagos") {
+		//appzillon.app.getSelectOption('element_dropdown_2');
+		$('#element_dropdown_2').append('<option id="element_dropdown_2_option_Lagos_Island" value="Lagos Island">Lagos Island</option>');
+		$('#element_dropdown_3').append('<option id="element_dropdown_3_option_Lagos" value="Lagos">Lagos</option>');
+		$("#mapBtn").click(showListLocate);
+	}
+	/*else if ($(stateObj).val() == "Tamil Nadu") {
+		//appzillon.app.getSelectOption('element_dropdown_2');
+		$('#element_dropdown_2').append('<option id="element_dropdown_2_option_Chennai" value="Chennai">Chennai</option>');
+		$('#element_dropdown_3').append(
+			'<option id="element_dropdown_3_option_Adyar" value="Adyar">Adyar</option><option id="element_dropdown_3_option_Triplicane" value="Triplicane">Triplicane</option>'
+		);
+	}*/
+	else if ($(stateObj).val() == "Select") {}
+};
+appzillon.app.cityChange = function(cityObj) {};
+appzillon.app.getSelectOption = function(dropdownId) {
+	$('#' + dropdownId).append('<option id="' + dropdownId + '_option_Select" value="Select">Select</option>');
+};
+appzillon.app.removeOption = function(dropdownId) {
+	$('#' + dropdownId + ' option').remove();
+};
+
+function showList() {
+	var atmListNearMe = $('#element_checkbox_1').prop('checked');
+	var branchListNearMe = $('#element_checkbox_2').prop('checked');
+	var atmList = $('#element_checkbox_3').prop('checked');
+	var branchList = $('#element_checkbox_4').prop('checked');
+	if (atmListNearMe === true && branchListNearMe === true) {
+		$("#fgp_container_list_1_main").removeClass("dispnone");
+		$("#fgp_container_list_2_main").removeClass("dispnone");
+	} else if (atmListNearMe === true) {
+		$("#fgp_container_list_1_main").addClass("dispnone");
+		$("#fgp_container_list_2_main").removeClass("dispnone");
+	} else if (branchListNearMe === true) {
+		$("#fgp_container_list_2_main").addClass("dispnone");
+		$("#fgp_container_list_1_main").removeClass("dispnone");
+	} else {
+		alert("Please select any of the types present");
+	}
+	//distance calculation
+	var distanceObj = appzillon.data.scrdata;
+	var dist1 = distanceCalculate(lat, longi, lat2, longi2);
+	//$("#ATM__distance_0").text(dist1 + "Km");
+	distanceObj.ATM[0].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat5, longi5);
+	//$("#ATM__distance_1").text(dist1 + "Km");
+	distanceObj.ATM[1].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat6, longi6);
+	//$("#ATM__distance_2").text(dist1 + "Km");
+	distanceObj.ATM[2].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat8, longi8);
+	//$("#ATM__distance_3").text(dist1 + "Km");
+	distanceObj.ATM[3].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat9, longi9);
+	//$("#ATM__distance_4").text(dist1 + "Km");
+	distanceObj.ATM[4].distance = dist1;
+	// var distanceObj1 = appzillon.data.scrdata;
+	dist1 = distanceCalculate(lat, longi, lat1, longi1);
+	//$("#Branch__distance_0").text(dist1 + "Km");
+	distanceObj.Branch[0].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat3, longi3);
+	//$("#Branch__distance_1").text(dist1 + "Km");
+	distanceObj.Branch[1].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat4, longi4);
+	//$("#Branch__distance_2").text(dist1 + "Km");
+	distanceObj.Branch[2].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat7, longi7);
+	//$("#Branch__distance_3").text(dist1 + "Km");
+	distanceObj.Branch[3].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat10, longi10);
+	//$("#Branch__distance_4").text(dist1 + "Km");
+	distanceObj.Branch[4].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat11, longi11);
+	//$("#Branch__distance_5").text(dist1 + "Km");
+	distanceObj.Branch[5].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat13, longi13);
+	//$("#Branch__distance_6").text(dist1 + "Km");
+	distanceObj.Branch[6].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat14, longi14);
+	//$("#Branch__distance_7").text(dist1 + "Km");
+	distanceObj.Branch[7].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat15, longi15);
+	//$("#Branch__distance_8").text(dist1 + "Km");
+	distanceObj.Branch[8].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat16, longi16);
+	//$("#Branch__distance_9").text(dist1 + "Km");
+	distanceObj.Branch[9].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat18, longi18);
+	//$("#Branch__distance_10").text(dist1 + "Km");
+	distanceObj.Branch[10].distance = dist1;
+	dist1 = distanceCalculate(lat, longi, lat19, longi19);
+	//$("#Branch__distance_11").text(dist1 + "Km");
+	distanceObj.Branch[11].distance = dist1;
+	//appzillon.data.loadData();
+	distanceObj.ATM.sort(function(a, b) {
+		return a.distance - b.distance;
+	});
+	distanceObj.Branch.sort(function(a, b) {
+		return a.distance - b.distance;
+	});
+	//alert("distance obj = " + JSON.stringify(distanceObj));
+	for (var i = 0; i < distanceObj.ATM.length; i++) {
+		distanceObj.ATM[i].distance = distanceObj.ATM[i].distance + "Km";
+	}
+	for (var i = 0; i < distanceObj.Branch.length; i++) {
+		distanceObj.Branch[i].distance = distanceObj.Branch[i].distance + "Km";
+	}
+	appzillon.data.loadData();
+	//drawing the route
+	/*	$("#fgp_container_list_1_row_0").click(function() {
+		loadMap1(lat2, longi2);
+	});
+	$("#fgp_container_list_1_row_1").click(function() {
+		loadMap1(lat5, longi5);
+	});
+	$("#fgp_container_list_1_row_2").click(function() {
+		loadMap1(lat6, longi6);
+	});
+	$("#fgp_container_list_1_row_3").click(function() {
+		loadMap1(lat8, longi8);
+	});
+	$("#fgp_container_list_1_row_4").click(function() {
+		loadMap1(lat9, longi9);
+	});
+	$("#fgp_container_list_2_row_0").click(function() {
+		loadMap1(lat1, longi1);
+	});
+	$("#fgp_container_list_2_row_1").click(function() {
+		loadMap1(lat3, longi3);
+	});
+	$("#fgp_container_list_2_row_2").click(function() {
+		loadMap1(lat4, longi4);
+	});
+	$("#fgp_container_list_2_row_3").click(function() {
+		loadMap1(lat7, longi7);
+	});
+	$("#fgp_container_list_2_row_4").click(function() {
+		loadMap1(lat10, longi10);
+	});
+	$("#fgp_container_list_2_row_5").click(function() {
+		loadMap1(lat11, longi11);
+	});
+	$("#fgp_container_list_2_row_6").click(function() {
+		loadMap1(lat13, longi13);
+	});
+	$("#fgp_container_list_2_row_7").click(function() {
+		loadMap1(lat14, longi14);
+	});
+	$("#fgp_container_list_2_row_8").click(function() {
+		loadMap1(lat15, longi15);
+	});
+	$("#fgp_container_list_2_row_9").click(function() {
+		loadMap1(lat16, longi16);
+	});
+	$("#fgp_container_list_2_row_10").click(function() {
+		loadMap1(lat18, longi18);
+	});
+	$("#fgp_container_list_2_row_11").click(function() {
+		loadMap1(lat19, longi19);
+	});*/
+}
+
+function showListLocate() {
+	var atmList = $('#element_checkbox_3').prop('checked');
+	var branchList = $('#element_checkbox_4').prop('checked');
+	if (atmList === true && branchList === true) {
+		$("#fgp_container_list_1_main").removeClass("dispnone");
+		$("#fgp_container_list_2_main").removeClass("dispnone");
+	} else if (atmList === true) {
+		$("#fgp_container_list_1_main").addClass("dispnone");
+		$("#fgp_container_list_2_main").removeClass("dispnone");
+	} else if (branchList === true) {
+		$("#fgp_container_list_2_main").addClass("dispnone");
+		$("#fgp_container_list_1_main").removeClass("dispnone");
+	} else {
+		alert("Please select any of the types present");
+	}
+	$("#fgp_container_list_1_row_0").click(function() {});
+	$("#fgp_container_list_1_row_1").click(function() {});
+	$("#fgp_container_list_1_row_2").click(function() {});
+	$("#fgp_container_list_1_row_3").click(function() {});
+	$("#fgp_container_list_1_row_4").click(function() {});
+	$("#fgp_container_list_2_row_0").click(function() {});
+	$("#fgp_container_list_2_row_1").click(function() {});
+	$("#fgp_container_list_2_row_2").click(function() {});
+	$("#fgp_container_list_2_row_3").click(function() {});
+	$("#fgp_container_list_2_row_4").click(function() {});
+	$("#fgp_container_list_2_row_5").click(function() {});
+	$("#fgp_container_list_2_row_6").click(function() {});
+	$("#fgp_container_list_2_row_7").click(function() {});
+	$("#fgp_container_list_2_row_8").click(function() {});
+	$("#fgp_container_list_2_row_9").click(function() {});
+	$("#fgp_container_list_2_row_10").click(function() {});
+	$("#fgp_container_list_2_row_11").click(function() {});
+}
+
+function getPosition() {
+	//alert("inside getposition");
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			//lat = position.coords.latitude;
+			lat = 6.4533588; //current
+			lat1 = 6.444641; //B1
+			lat2 = 6.447417; //A1
+			lat3 = 6.4578055; //B2
+			lat4 = 6.4475211; //B3
+			lat5 = 6.44428; //A2
+			lat6 = 6.454095; //A3
+			lat7 = 6.4534248; //B4
+			lat8 = 6.449989; //A4
+			lat9 = 6.4626536; //A5
+			lat10 = 6.4534474; //B5
+			lat11 = 6.4543221; //B6
+			lat13 = 6.458857; //B7
+			lat14 = 6.4536951; //B8
+			lat15 = 6.451397; //B9
+			lat16 = 6.4581034; //B10
+			lat18 = 6.4618846; //B11
+			lat19 = 6.6034904; //B12
+			//alert("lattitude" + lat);
+			//longi = position.coords.longitude;
+			longi = 3.3939771; //current
+			longi1 = 3.364084; //B1
+			longi2 = 3.39584; //A1
+			longi3 = 3.3808467; //B2
+			longi4 = 3.4060219; //B3
+			longi5 = 3.40234; //A2
+			longi6 = 3.403305; //A3
+			longi7 = 3.3895922; //B4
+			longi8 = 3.397055; //A4
+			longi9 = 3.3892196; //A5
+			longi10 = 3.3862359; //B5
+			longi11 = 3.3860828; //B6
+			longi13 = 3.385483; //B7
+			longi14 = 3.3895116; //B8
+			longi15 = 3.3963974; //B9
+			longi16 = 3.3875361; //B10
+			longi18 = 3.3839282; //B11
+			longi19 = 3.3463733; //B12
+			//alert("longitude" + longi);
+		});
+	} else {
+		alert("Geolocation is not supported by this browser.");
+	}
+}
+appzillon.app.sendLL = function(obj) {
+	var city = $(obj).find("p:first");
+	var ct = city.text();
+	// alert(ct);
+	// switch(ct){
+	//   case "SAMUEL ASABIA HOUSE 35,MARINA LAGOS" :loadMap1(lat1, longi1) ;
+	//     break;
+	// }
+	if (ct == "SAMUEL ASABIA HOUSE 35,MARINA LAGOS") {
+		appzillon.plugin.store("latToSnd", lat1);
+		appzillon.plugin.store("longiToSnd", longi1);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat1, longi1);
+	} else if (ct == "214 BROAD STREET, ELEPHANT HOUSE") {
+      appzillon.plugin.store("latToSnd", lat3);
+		appzillon.plugin.store("longiToSnd", longi3);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat3, longi3);
+	} else if (ct == "28 BERKLEY STREET, ONIKAN") {
+      appzillon.plugin.store("latToSnd", lat4);
+		appzillon.plugin.store("longiToSnd", longi4);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat4, longi4);
+	} else if (ct == "8/10 BROAD STREET") {
+      appzillon.plugin.store("latToSnd", lat7);
+		appzillon.plugin.store("longiToSnd", longi7);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat7, longi7);
+	} else if (ct == "42/43, MARINA") {
+      appzillon.plugin.store("latToSnd", lat10);
+		appzillon.plugin.store("longiToSnd", longi10);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat10, longi10);
+	} else if (ct == "2/4 CUSTOMS STREET") {
+      appzillon.plugin.store("latToSnd", lat11);
+		appzillon.plugin.store("longiToSnd", longi11);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat11, longi11);
+	} else if (ct == "53 OFFIN ROAD") {
+      appzillon.plugin.store("latToSnd", lat13);
+		appzillon.plugin.store("longiToSnd", longi13);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat13, longi13);
+	} else if (ct == "21/25 BROAD STREET") {
+      appzillon.plugin.store("latToSnd", lat14);
+		appzillon.plugin.store("longiToSnd", longi14);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat14, longi14);
+	} else if (ct == "235, IGBOSERE ROAD") {
+      appzillon.plugin.store("latToSnd", lat15);
+		appzillon.plugin.store("longiToSnd", longi15);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat15, longi15);
+	} else if (ct == "66,NNAMDI AZIKWE STREET") {
+      appzillon.plugin.store("latToSnd", lat16);
+		appzillon.plugin.store("longiToSnd", longi16);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat16, longi16);
+	} else if (ct == "111, ALAKORO STREET, IDUMOTA") {
+      appzillon.plugin.store("latToSnd", lat18);
+		appzillon.plugin.store("longiToSnd", longi18);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat18, longi18);
+	} else if (ct == "53 BALOGUN STREET") {
+      appzillon.plugin.store("latToSnd", lat19);
+		appzillon.plugin.store("longiToSnd", longi19);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat19, longi19);
+	}
+};
+appzillon.app.sendLLA = function(obj) {
+	var city = $(obj).find("p:first");
+	var ct = city.text();
+	if (ct == "21/22 MARINA") {
+      appzillon.plugin.store("latToSnd", lat2);
+		appzillon.plugin.store("longiToSnd", longi2);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat2, longi2);
+	} else if (ct == "SHOP G6, CITY MALL ONIKAN") {
+      appzillon.plugin.store("latToSnd", lat5);
+		appzillon.plugin.store("longiToSnd", longi5);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat5, longi5);
+	} else if (ct == "BLK 13 SUITES 1-5 & 12 SURA SHOPPING COMPLEX") {
+      appzillon.plugin.store("latToSnd", lat6);
+		appzillon.plugin.store("longiToSnd", longi6);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat6, longi6);
+	} else if (ct == "CITY HALL CATHOLIC MISSION STREET") {
+      appzillon.plugin.store("latToSnd", lat8);
+		appzillon.plugin.store("longiToSnd", longi8);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat8, longi8);
+	} else if (ct == "60/62 ENU OWA STREET") {
+      appzillon.plugin.store("latToSnd", lat9);
+		appzillon.plugin.store("longiToSnd", longi9);
+		appzillon.util.launchScreen("Map");
+		//loadMap1(lat9, longi9);
+	}
+};
+
+function loadMap() {
+	alert("Maps API called");
+	// appzillon.util.launchScreen('Map');
+	//alert("inside loadmap");
+	var mypos = new google.maps.LatLng(lat, longi);
+	var mypos1 = new google.maps.LatLng(lat1, longi1);
+	var mypos2 = new google.maps.LatLng(lat2, longi2);
+	var mypos3 = new google.maps.LatLng(lat3, longi3);
+	var mypos4 = new google.maps.LatLng(lat4, longi4);
+	var mypos5 = new google.maps.LatLng(lat5, longi5);
+	var mypos6 = new google.maps.LatLng(lat6, longi6);
+	var mypos7 = new google.maps.LatLng(lat7, longi7);
+	var mypos8 = new google.maps.LatLng(lat8, longi8);
+	var mypos9 = new google.maps.LatLng(lat9, longi9);
+	var mypos10 = new google.maps.LatLng(lat10, longi10);
+	var mypos11 = new google.maps.LatLng(lat11, longi11);
+	var mypos13 = new google.maps.LatLng(lat13, longi13);
+	var mypos14 = new google.maps.LatLng(lat14, longi14);
+	var mypos15 = new google.maps.LatLng(lat15, longi15);
+	var mypos16 = new google.maps.LatLng(lat16, longi16);
+	var mypos18 = new google.maps.LatLng(lat18, longi18);
+	var mypos19 = new google.maps.LatLng(lat19, longi19);
+	try {
+      alert("Map Loading");
+		var map = new google.maps.Map(document.getElementById('grid_map_row1_main_div'), {
+		zoom: 10,
+		center: mypos,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoomControl: true
+	});
+      alert("Map Loaded");
+		var i, marker, marker1, marker2, marker3, marker4, marker5, marker6, marker7, marker8, marker9, marker10, marker11, marker13, marker14, marker15,
+			marker16, marker18,
+			marker19;
+		//var infowindow = new google.maps.InfoWindow();
+		//alert("setting marker");
+		var iconb = "http://maps.google.com/mapfiles/ms/icons/blue.png";
+		var icony = "http://maps.google.com/mapfiles/ms/icons/yellow.png";
+		var icong = "http://maps.google.com/mapfiles/ms/icons/green.png";
+		marker = new google.maps.Marker({
+			position: mypos,
+			animation: google.maps.Animation.DROP,
+			visible: true,
+			icon: new google.maps.MarkerImage(iconb),
+			map: map
+		});
+		marker.setMap(map);
+		var atm = $('#element_checkbox_1').prop('checked');
+		var branch = $('#element_checkbox_2').prop('checked');
+      alert("checkBoxes are checked");
+		if (atm === true && branch === true) {
+			marker2 = new google.maps.Marker({
+				position: mypos2,
+				animation: google.maps.Animation.DROP,
+				icon: new google.maps.MarkerImage(icong),
+				visible: true,
+				map: map,
+				title: "ATM center"
+			});
+			marker5 = new google.maps.Marker({
+				position: mypos5,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker6 = new google.maps.Marker({
+				position: mypos6,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker8 = new google.maps.Marker({
+				position: mypos8,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker9 = new google.maps.Marker({
+				position: mypos9,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker1 = new google.maps.Marker({
+				position: mypos1,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker3 = new google.maps.Marker({
+				position: mypos3,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker4 = new google.maps.Marker({
+				position: mypos4,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker7 = new google.maps.Marker({
+				position: mypos7,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker10 = new google.maps.Marker({
+				position: mypos10,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Brach office"
+			});
+			marker11 = new google.maps.Marker({
+				position: mypos11,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker13 = new google.maps.Marker({
+				position: mypos13,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Brach office"
+			});
+			marker14 = new google.maps.Marker({
+				position: mypos14,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Brach office"
+			});
+			marker15 = new google.maps.Marker({
+				position: mypos15,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker16 = new google.maps.Marker({
+				position: mypos16,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker18 = new google.maps.Marker({
+				position: mypos18,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker19 = new google.maps.Marker({
+				position: mypos19,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker1.setMap(map);
+			marker3.setMap(map);
+			marker4.setMap(map);
+			marker7.setMap(map);
+			marker10.setMap(map);
+			marker11.setMap(map);
+			marker13.setMap(map);
+			marker14.setMap(map);
+			marker15.setMap(map);
+			marker16.setMap(map);
+			marker18.setMap(map);
+			marker19.setMap(map);
+			marker2.setMap(map);
+			marker5.setMap(map);
+			marker6.setMap(map);
+			marker8.setMap(map);
+			marker9.setMap(map);
+		} else if (atm === true) {
+			marker2 = new google.maps.Marker({
+				position: mypos2,
+				animation: google.maps.Animation.DROP,
+				icon: new google.maps.MarkerImage(icong),
+				visible: true,
+				map: map,
+				title: "ATM center"
+			});
+			marker5 = new google.maps.Marker({
+				position: mypos5,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker6 = new google.maps.Marker({
+				position: mypos6,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker8 = new google.maps.Marker({
+				position: mypos8,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker9 = new google.maps.Marker({
+				position: mypos9,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icong),
+				map: map,
+				title: "ATM center"
+			});
+			marker2.setMap(map);
+			marker5.setMap(map);
+			marker6.setMap(map);
+			marker8.setMap(map);
+			marker9.setMap(map);
+		} else if (branch === true) {
+			marker1 = new google.maps.Marker({
+				position: mypos1,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker3 = new google.maps.Marker({
+				position: mypos3,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker4 = new google.maps.Marker({
+				position: mypos4,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker7 = new google.maps.Marker({
+				position: mypos7,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker10 = new google.maps.Marker({
+				position: mypos10,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Brach office"
+			});
+			marker11 = new google.maps.Marker({
+				position: mypos11,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker13 = new google.maps.Marker({
+				position: mypos13,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Brach office"
+			});
+			marker14 = new google.maps.Marker({
+				position: mypos14,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Brach office"
+			});
+			marker15 = new google.maps.Marker({
+				position: mypos15,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker16 = new google.maps.Marker({
+				position: mypos16,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker18 = new google.maps.Marker({
+				position: mypos18,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker19 = new google.maps.Marker({
+				position: mypos19,
+				animation: google.maps.Animation.DROP,
+				visible: true,
+				icon: new google.maps.MarkerImage(icony),
+				map: map,
+				title: "Branch office"
+			});
+			marker1.setMap(map);
+			marker3.setMap(map);
+			marker4.setMap(map);
+			marker7.setMap(map);
+			marker10.setMap(map);
+			marker11.setMap(map);
+			marker13.setMap(map);
+			marker14.setMap(map);
+			marker15.setMap(map);
+			marker16.setMap(map);
+			marker18.setMap(map);
+			marker19.setMap(map);
+		}
+	} catch (e) {
+		alert("Exception in loadMap:::::" + e);
+	}
+}
+appzillon.app.load_Map = function() {
+  var ifNearMe = appzillon.plugin.retrieve('flag1');
+  if(ifNearMe == "Marker"){
+    appzillon.plugin.store("flag1","");
+    loadMap();
+  }
+  else{
+    loadMap1();
+  }
+	
+};
+
+function loadMap1() {
+	alert("function call success");
+	var directionsDisplay = new google.maps.DirectionsRenderer();
+  alert("1");
+	var directionsService = new google.maps.DirectionsService();
+  alert("2");
+	var lat = 6.4533588; //current
+	var longi = 3.3939771; //current
+  alert("3");
+	var mypos = new google.maps.LatLng(lat, longi);
+  alert("4");
+	var lat1 = appzillon.plugin.retrieve("latToSnd");
+	var lon1 = appzillon.plugin.retrieve("longiToSnd");
+  alert("5");
+	var mypos1 = new google.maps.LatLng(lat1, lon1);
+	alert(mypos);
+	alert(mypos1);
+	var map = new google.maps.Map(document.getElementById('grid_map_row1_main_div'), {
+		zoom: 10,
+		center: mypos,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoomControl: true
+	});
+	directionsDisplay.setMap(map);
+	var request = {
+		origin: mypos,
+		destination: mypos1,
+		travelMode: google.maps.TravelMode.DRIVING
+		//provideRouteAlternatives: true
+	};
+	directionsService.route(request, function(response, status) {
+		if (status == google.maps.DirectionsStatus.OK) {
+			directionsDisplay.setDirections(response);
+		}
+	});
+}
+/*function loadMap1(lat1, lon1) {
+	// alert("function call success");
+	var directionsDisplay = new google.maps.DirectionsRenderer();
+	var directionsService = new google.maps.DirectionsService();
+	var mypos = new google.maps.LatLng(lat, longi);
+	var mypos1 = new google.maps.LatLng(lat1, lon1);
+	// alert(mypos);
+	//alert(mypos1);
+	var map = new google.maps.Map(document.getElementById('grid_map_row_main_div'), {
+		zoom: 10,
+		center: mypos,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoomControl: true
+	});
+	directionsDisplay.setMap(map);
+	var request = {
+		origin: mypos,
+		destination: mypos1,
+		travelMode: google.maps.TravelMode.DRIVING
+		//provideRouteAlternatives: true
+	};
+	directionsService.route(request, function(response, status) {
+		if (status == google.maps.DirectionsStatus.OK) {
+			directionsDisplay.setDirections(response);
+		}
+	});
+}*/
+function distanceCalculate(lat1, lon1, lat2, lon2) {
+	//alert("function call success");
+	var radlat1 = Math.PI * lat1 / 180;
+	var radlat2 = Math.PI * lat2 / 180;
+	var radlon1 = Math.PI * lon1 / 180;
+	var radlon2 = Math.PI * lon2 / 180;
+	var theta = lon1 - lon2;
+	var radtheta = Math.PI * theta / 180;
+	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	dist = Math.acos(dist);
+	dist = dist * 180 / Math.PI;
+	dist = dist * 60 * 1.1515;
+	dist = dist * 1.609344;
+	dist = dist.toFixed(1);
+	//alert(dist + "Km");
+	return dist;
+}

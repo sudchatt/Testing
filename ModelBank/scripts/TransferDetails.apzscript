@@ -1,0 +1,40 @@
+apz.app.onLoad_TransferDetails = function() {
+    apz.data.loadJsonData("Dashboard_data");
+    //apz.data.scrdata = apz.util.copyJSONObject(apz.app.transferContent);
+    //apz.data.loadData();
+   // $("#Transfers__i__intrabank__amount").removeClass("tright");
+  //  $("#Transfers__i__intrabank__amount").removeClass("tamount");
+  //  $("#Transfers__i__intrabank__amount").removeClass("ui-amount");
+  //  if (!$("#Transfers__i__intrabank__scheduleDate").text()) {
+  //      $(".scheduledate").addClass("dispnone");
+  //  };
+    var lfromaccno = "509XXXXXX025";
+    try {
+        lfromaccno = apz.data.scrdata.Transfers_Req.intrabank.from;
+    } catch (e) {
+        lfromaccno = "509XXXXXX025";
+    }
+    apz.app.transferDetailsBeneficiery(lfromaccno);
+}
+apz.app.launchfinal = function() {};
+apz.app.callback = function() {
+    var status;
+    if (status == "success") {
+        apz.launchSubScreen("Success");
+    } else {
+        apz.launchSubScreen("Failure");
+    }
+}
+apz.app.transferDetailsBeneficiery = function(pfromacc) {
+    if (pfromacc == "509XXXXXX029") {
+        $('#element_text_9').text('509XXXXXX029');
+        $('#element_text_11').html('$79,000.00');
+    } else if (pfromacc == "509XXXXXX023") {
+        $("#element_text_9").text("509XXXXXX023");
+        $("#element_text_11").html("$96,000.00");
+    } else if (pfromacc == "509XXXXXX025") {
+        $("#element_text_9").text("509XXXXXX025");
+        $("#element_text_11").html("$68,000.00");
+    }
+    //apz.chart.renderChart();
+};

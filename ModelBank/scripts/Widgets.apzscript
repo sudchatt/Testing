@@ -1,0 +1,12 @@
+apz.app.onLoad_Widgets = function() {
+    //apz.data.loadJsonData("Widgets");
+    
+    var filePath = apz.getDataFilesPath() + "/Widgets.json";
+      var content = apz.getFile(filePath);
+      if (!apz.isNull(content)) {
+         content = JSON.parse(content);
+         apz.data.appendData(content);
+         apz.data.loadData("widgets");
+      }
+    
+};

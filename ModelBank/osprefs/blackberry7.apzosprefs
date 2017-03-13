@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<OS_OSPREFS_BLACKBERRY>
+    <NAME>blackberry7</NAME>
+    <BUNDLEID>com.iexceed.modalbank</BUNDLEID>
+    <APPVERSION>2.1</APPVERSION>
+    <BBCODESIGNPASSWORD/>
+    <BBNOTIFAPPID/>
+    <BBPASSWORD/>
+    <BBNOTIFSERVERURL/>
+    <BBNOTIFPORTNO/>
+    <BBNOTIFICON/>
+    <BBBADGEICON/>
+    <BBSPLASHICON/>
+    <ADDITONALFILES/>
+</OS_OSPREFS_BLACKBERRY>

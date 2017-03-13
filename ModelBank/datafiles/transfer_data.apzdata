@@ -1,0 +1,58 @@
+{
+    "Transfers_Res": {
+        "userdetails": {
+            "img": "user.png",
+            "name": "Arvind Prasad",
+            "badge": "3"
+        },
+        "transfers": {
+            "amount": ""
+        },
+        "doughnut": [
+            {
+                "balance": "79673",
+                "type": "balance Available"
+            },
+            {
+                "balance": "20561",
+                "type": "Spent"
+            }
+        ],
+        "stackedColumn": [
+            {
+                "amount": "100",
+                "account": "xxx101",
+                "type": "sav"
+            },
+            {
+                "amount": "20",
+                "account": "xxx101",
+                "type": "cur"
+            }
+        ],
+        "stackedColumn_NEFT": [
+            {
+                "amount": "100",
+                "account": "xxx101",
+                "type": "sav"
+            },
+            {
+                "amount": "30",
+                "account": "xxx101",
+                "type": "cur"
+            }
+        ],
+        "stackedColumn_RTGS": [
+            {
+                "amount": "100",
+                "account": "xxx101",
+                "type": "sav"
+            },
+            {
+                "amount": "40",
+                "account": "xxx101",
+                "type": "cur"
+            }
+        ]
+    }
+}

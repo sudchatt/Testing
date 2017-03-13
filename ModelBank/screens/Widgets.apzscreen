@@ -1,0 +1,1 @@
+{"typeclass":"SCREEN","name":"Widgets","type":"SCREEN","childs":[],"screendescription":"New Screen","interfaces":[{"name":"widgets","request":"Y","response":"Y","fault":"N"}],"id":[{"devicegroup":"All","portraitlo":"Tablet","landscapelo":"Tablet"}]}

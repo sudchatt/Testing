@@ -1,0 +1,3 @@
+apz.app.onLoad_Success = function() {
+    apz.data.loadJsonData("Dashboard_data");
+}

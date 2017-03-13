@@ -1,0 +1,216 @@
+{
+    'process': {
+        'id': 'epstest/process/test',
+        'views': {
+            'Transfers': {
+                'uri': 'scp/modelbank/views/Transfers',
+                'controller': 'scp/modelbank/controllers/app/Transfers'
+            },
+            'TransferDetails': {
+                'uri': 'scp/modelbank/views/TransferDetails',
+                'controller': 'scp/modelbank/controllers/app/TransferDetails'
+            },
+            'Dashboard': {
+                'uri': 'scp/modelbank/views/Dashboard',
+                'controller': 'scp/modelbank/controllers/app/Dashboard'
+            },
+            'finish': {
+                'uri': '//scp/test/views/finish',
+                'controller': 'scp/test/controllers/finish'
+            }
+        },
+        'endpoints': {
+            'Transfers': {
+                'uri': '/epstest/demo/demoModule',
+                'method': 'GET'
+            },
+            'POST': {
+                'uri': '/epstest/demo/demoModule',
+                'method': 'POST'
+            },
+            'PUT': {
+                'uri': '/epstest/demo/demoModule',
+                'method': 'PUT'
+            },
+            'DELETE': {
+                'uri': '/epstest/demo/demoModule',
+                'method': 'DELETE'
+            }
+        },
+        'tasks': [
+            {
+                'id': '1',
+                'name': 'Dashboard',
+                'view': {
+                    'src': 'Dashboard'
+                },
+                'events': [
+                    {
+                        'name': 'transfers',
+                        'action': {
+                            'transition': {
+                                'task-id': '2'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'Dashboard',
+                        'action': {
+                            'transition': {
+                                'task-id': '1'
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                'id': '2',
+                'name': 'transfers',
+                'view': {
+                    'src': 'Transfers'
+                },
+                'events': [
+                    {
+                        'name': 'transferDetails',
+                        'action': {
+                            'transition': {
+                                'task-id': '3'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'back',
+                        'action': {
+                            'transition': {
+                                'task-id': '1'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'Dashboard',
+                        'action': {
+                            'transition': {
+                                'task-id': '1'
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                'id': '3',
+                'name': 'transferDetails',
+                'view': {
+                    'src': 'TransferDetails'
+                },
+                'events': [
+                    {
+                        'name': 'success',
+                        'action': {
+                            'services': [
+                                'Transfers'
+                            ]
+                        }
+                    },
+                    {
+                        'name': 'failure',
+                        'action': {
+                            'transition': {
+                                'task-id': '5'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'back',
+                        'action': {
+                            'transition': {
+                                'task-id': '2'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'Dashboard',
+                        'action': {
+                            'transition': {
+                                'task-id': '1'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'transfers',
+                        'action': {
+                            'transition': {
+                                'task-id': '2'
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                'id': '4',
+                'name': 'success',
+                'view': {
+                    'src': 'Success'
+                },
+                'events': [
+                    {
+                        'name': 'back',
+                        'action': {
+                            'transition': {
+                                'task-id': '2'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'Dashboard',
+                        'action': {
+                            'transition': {
+                                'task-id': '1'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'transfers',
+                        'action': {
+                            'transition': {
+                                'task-id': '2'
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                'id': '5',
+                'name': 'failure',
+                'view': {
+                    'src': 'Failure'
+                },
+                'events': [
+                    {
+                        'name': 'back',
+                        'action': {
+                            'transition': {
+                                'task-id': '2'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'Dashboard',
+                        'action': {
+                            'transition': {
+                                'task-id': '1'
+                            }
+                        }
+                    },
+                    {
+                        'name': 'transfers',
+                        'action': {
+                            'transition': {
+                                'task-id': '2'
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

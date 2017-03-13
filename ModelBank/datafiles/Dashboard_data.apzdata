@@ -1,0 +1,162 @@
+{
+    "SidebarList_Res": {
+        "sidebar": [
+            {
+                "icon": "bb_fb.png",
+                "title": "OVERVIEW"
+            },
+            {
+                "icon": "bb_fb.png",
+                "title": "TRANSFERS"
+            },
+            {
+                "icon": "bb_fb.png",
+                "title": "PAYMENTS"
+            },
+            {
+                "icon": "bb_fb.png",
+                "title": "CHECK DEPOSITS"
+            },
+            {
+                "icon": "bb_fb.png",
+                "title": "SERVICES"
+            },
+            {
+                "icon": "bb_fb.png",
+                "title": "PROMOTIONS"
+            },
+            {
+                "icon": "bb_fb.png",
+                "title": "UTILITIES"
+            },
+            {
+                "icon": "bb_fb.png",
+                "title": "SETTINGS"
+            }
+        ]
+    },
+    "UserDetails_Res": {
+        "userdetails": {
+            "img": "user.png",
+            "name": "Arvind Prasad",
+            "lastlogin": "last login at 3:45 PM today",
+            "badge": "1"
+        }
+    },
+    "Dashboard_Res": {
+        "Assets": [
+            {
+                "amount": 132540.0,
+                "type": "Savings"
+            },
+            {
+                "amount": 300000.0,
+                "type": "Deposits"
+            },
+            {
+                "amount": 615382.0,
+                "type": "Investments"
+            },
+            {
+                "amount": 750000.0,
+                "type": "Loans"
+            },
+            {
+                "amount": 167920.0,
+                "type": "Credit cards"
+            }
+        ],
+        "Accounts": [
+            {
+                "amount": "$132540.0",
+                "type": "Savings"
+            },
+            {
+                "amount": "$300000.0",
+                "type": "Deposits"
+            },
+            {
+                "amount": "$615382.0",
+                "type": "Investments"
+            },
+            {
+                "amount": "$750000.0",
+                "type": "Loans"
+            },
+            {
+                "amount": "$16792.0",
+                "type": "Credit cards"
+            }
+        ],
+        "Analysis": [
+            {
+                "amount": "26358",
+                "type": "Rent-$26,358.00"
+            },
+            {
+                "amount": "22162",
+                "type": "Transfer-$22,162.00"
+            },
+            {
+                "amount": "23034",
+                "type": "EMI-$23,034.00"
+            },
+            {
+                "amount": "24981",
+                "type": "Food-$24,981.00"
+            }
+        ],
+        "Activities": [
+            {
+                "amount": "$1576.0",
+                "date": "25/07/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Total"
+            },
+            {
+                "amount": "$1576.0",
+                "date": "31/06/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Total"
+            },
+            {
+                "amount": "$126358.0",
+                "date": "09/06/2014",
+                "description": "Salary of $126,358.00 is credited to account"
+            },
+            {
+                "amount": "$1576.0",
+                "date": "29/05/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Staples"
+            },
+            {
+                "amount": "$1276.0",
+                "date": "19/05/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Flipkart"
+            },
+            {
+                "amount": "$1476.0",
+                "date": "25/07/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Amazon"
+            },
+            {
+                "amount": "$1076.0",
+                "date": "25/07/2014",
+                "description": "Salary of $142,000.00 is credited to accounte"
+            },
+            {
+                "amount": "$1076.0",
+                "date": "25/07/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a purchase at Reliance Fresh"
+            },
+            {
+                "amount": "$1076.0",
+                "date": "25/07/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a payment for rent"
+            },
+            {
+                "amount": "$1076.0",
+                "date": "25/07/2014",
+                "description": "Debit Card no. 2349xxxxx8747 was used to make a payment for rent"
+            }
+        ]
+    }
+}

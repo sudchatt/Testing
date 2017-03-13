@@ -1,0 +1,35 @@
+var iflag;
+apz.app.onLoad_Transfers = function() {
+    apz.data.loadJsonData("Dashboard_data");
+    /*$("#date_section_sec_col_div").hide();
+    $("#account_details1_sec_col_div").hide();
+    $("#account_details2_sec_col_div").hide();
+    $("#chartcol_col_div").hide();
+    $('#defaultActive_cbox_title').addClass('cbox-title-active');
+    $('#otherAccnCol_cbox_body_div').attr('style', 'display:none');
+    $('#loanAccnCol_cbox_body_div').attr('style', 'display:none');
+    $('#addPayeeCol_cbox_body_div').attr('style', 'display:none');
+    $("#intrabank_chart").hide();*/
+};
+$(".iamount").blur(function(e) {
+    var bill = e.currentTarget.value;
+    bill = apz.unFormatNumber(bill, apz.thousandSeperator);
+    $("#chartcol_col_div").show();
+});
+apz.app.transferBeneficiery = function(beneficiery, btype) {
+    /*if (beneficiery.value == "509XXXXXX029") {
+        $('#element_text_9').text('509XXXXXX029');
+        $('#element_text_11').html('$79,000.00');
+    } else if (beneficiery.value == "509XXXXXX023") {
+        $("#element_text_9").text("509XXXXXX023");
+        $("#element_text_11").html("$96,000.00");
+    } else if (beneficiery.value == "509XXXXXX025") {
+        $("#element_text_9").text("509XXXXXX025");
+        $("#element_text_11").html("$68,000.00");
+    }*/
+};
+$('.cbox-title').click(function() {
+    $('.cbox-title').removeClass('cbox-title-active');
+    var lid = $(this).attr('id');
+    $('#' + lid).addClass('cbox-title-active');
+});

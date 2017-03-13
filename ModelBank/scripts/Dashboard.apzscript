@@ -1,0 +1,20 @@
+apz.app.onLoad_Dashboard = function() {
+   apz.data.loadJsonData("Dashboard_data");
+};
+/*apz.app.setScreenLauncherHeight = function() {
+    var bgHeight = $(window).height();
+    if (bgHeight > 768) {
+        $('#grid_column_2_screenLauncher_col_div').css('height', bgHeight);
+        $('.vmenu').css('height', bgHeight);
+    } else {
+        $('#grid_column_2_screenLauncher_col_div').css('height', 768);
+        $('.vmenu').css('height', 688);
+    }
+};*/
+/*apz.chart.updateChartBeforeRender = function(pcharttype, pchartdata, pfgp, lchart) {
+    if (pfgp == 'container_col_dashboard') {
+        pchartdata.chart.showAlternateHGridColor = 0;
+    } else if (pfgp == 'container_doughnut_dashboard') {
+        pchartdata.chart.baseFontSize = 13;
+    }
+};*/
