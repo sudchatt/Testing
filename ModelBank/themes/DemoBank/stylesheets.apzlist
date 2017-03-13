@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<CHILDS>
+    <CHILD>
+        <NAME>db</NAME>
+        <TYPE>STYLESHEET</TYPE>
+    </CHILD>
+    <CHILD>
+        <NAME>dbphone</NAME>
+        <TYPE>STYLESHEET</TYPE>
+    </CHILD>
+    <CHILD>
+        <NAME>flip</NAME>
+        <TYPE>STYLESHEET</TYPE>
+    </CHILD>
+</CHILDS>
